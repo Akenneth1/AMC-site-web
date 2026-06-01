@@ -433,13 +433,20 @@ function escHtml(str) {
 
 // Guard admin page access
 function navigate(page) {
+  console.log('navigate() called with page:', page);
   // Intercept admin page — require login
   if (page === 'admin' && !sessionStorage.getItem(ADMIN_SESSION)) {
     page = 'admin-login';
   }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + page);
-  if (target) target.classList.add('active');
+  console.log('Target element for "page-' + page + '":', target);
+  if (target) {
+    target.classList.add('active');
+    console.log('Added active class to:', target.id);
+  } else {
+    console.error('Page element not found: page-' + page);
+  }
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   const navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
