@@ -1,18 +1,6 @@
 // Script principal pour l'interactivité du site
 
-// NAVIGATION
-function navigate(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById('page-' + page);
-  if (target) target.classList.add('active');
-
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  const navEl = document.getElementById('nav-' + page);
-  if (navEl) navEl.classList.add('active');
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  observeReveal();
-}
+// NAVIGATION — voir version admin en bas du fichier
 
 // MOBILE MENU
 function openMobile() {
@@ -358,3 +346,156 @@ function handlePayment() {
   }
   alert(`Merci ${nom} !\n\nLe système de paiement en ligne sera disponible très prochainement.\n\nEn attendant, vous pouvez régler par virement ou chèque à l'ordre d'Art Mode & Culture.\n\nContactez-nous : artmodeculture@gmail.com`);
 }
+// ═══════════════════════════════════════════════════════════
+//  ADMIN AUTH
+// ═══════════════════════════════════════════════════════════
+const ADMIN_EMAIL    = 'artmodeculture@gmail.com';
+const ADMIN_PASSWORD = 'Bonneannee1';
+const ADMIN_SESSION  = 'amc_admin_session';
+
+function adminLogin() {
+  const email = document.getElementById('adminEmail')?.value?.trim();
+  const pwd   = document.getElementById('adminPassword')?.value;
+  const err   = document.getElementById('adminLoginError');
+
+  if (email === ADMIN_EMAIL && pwd === ADMIN_PASSWORD) {
+    sessionStorage.setItem(ADMIN_SESSION, '1');
+    navigate('admin');
+    adminRefresh();
+  } else {
+    if (err) {
+      err.textContent = 'Email ou mot de passe incorrect.';
+      err.style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+      setTimeout(() => { err.style.display = 'none'; }, 3000);
+    }
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem(ADMIN_SESSION);
+  navigate('accueil');
+}
+
+function adminRefresh() {
+  const list    = getAdherents();
+  const now     = new Date();
+  const curMonth = now.getMonth() + '/' + now.getFullYear();
+
+  const total   = list.length;
+  const pending = list.filter(a => a.statut === 'En attente de paiement').length;
+  const thisMonth = list.filter(a => {
+    if (!a.dateInscription) return false;
+    const parts = a.dateInscription.split('/');
+    return parts.length >= 3 && (parts[1] + '/' + parts[2]) === curMonth;
+  }).length;
+
+  const statTotal   = document.getElementById('admin-stat-total');
+  const statPending = document.getElementById('admin-stat-pending');
+  const statMonth   = document.getElementById('admin-stat-month');
+  if (statTotal)   statTotal.textContent   = total;
+  if (statPending) statPending.textContent = pending;
+  if (statMonth)   statMonth.textContent   = thisMonth;
+
+  const tbody = document.getElementById('adminTableBody');
+  if (!tbody) return;
+
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:32px; text-align:center; color:var(--muted);">Aucun adhérent enregistré.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = list.slice().reverse().map(a => `
+    <tr>
+      <td>${escHtml(a.nom || '—')}</td>
+      <td>${escHtml(a.email || '—')}</td>
+      <td>${escHtml(a.profil || '—')}</td>
+      <td>${escHtml(a.dateInscription || '—')}</td>
+      <td><span class="admin-badge ${a.statut === 'En attente de paiement' ? 'pending' : 'active'}">${escHtml(a.statut || '—')}</span></td>
+    </tr>
+  `).join('');
+}
+
+function adminClearData() {
+  if (confirm('Êtes-vous sûr de vouloir supprimer TOUS les adhérents ? Cette action est irréversible.')) {
+    localStorage.removeItem(ADHERENTS_KEY);
+    adminRefresh();
+  }
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Guard admin page access
+function navigate(page) {
+  // Intercept admin page — require login
+  if (page === 'admin' && !sessionStorage.getItem(ADMIN_SESSION)) {
+    page = 'admin-login';
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  observeReveal();
+  if (page === 'admin') adminRefresh();
+}
+
+// Alias for backward compatibility
+function getAdherents() { return getadherents(); }
+
+// ═══════════════════════════════════════════════════════════
+//  THEME TOGGLE — Dark / Light
+// ═══════════════════════════════════════════════════════════
+const THEME_KEY = 'amc_theme';
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-theme');
+  localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
+}
+
+// Restore saved theme on load
+(function() {
+  if (localStorage.getItem(THEME_KEY) === 'light') {
+    document.body.classList.add('light-theme');
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════
+//  MODAL EXPOSANTS FESTIVAL 2026
+// ═══════════════════════════════════════════════════════════
+function openFestivalModal() {
+  const modal = document.getElementById('festivalModal');
+  if (!modal) return;
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  modal.scrollTop = 0;
+}
+
+function closeFestivalModal(e) {
+  // If called with an event, only close if clicking the backdrop (the modal itself, not its children)
+  if (e && e.currentTarget !== e.target) return;
+  const modal = document.getElementById('festivalModal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Override to also handle Escape for the festival modal
+const _origKeydown = document.onkeydown;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('festivalModal');
+    if (modal && modal.style.display !== 'none') {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+});

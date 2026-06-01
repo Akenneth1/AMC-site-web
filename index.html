@@ -11,6 +11,71 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+
+<style>
+/* ── VIE AMC MOSAIC ──────────────────────────── */
+.vie-amc-mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr 1fr;
+  gap: 4px;
+  margin-top: 40px;
+  height: 480px;
+}
+.vie-amc-side, .vie-amc-center {
+  position: relative; overflow: hidden; cursor: pointer;
+}
+.vie-amc-side img, .vie-amc-center img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .55s ease, filter .4s;
+  filter: brightness(.78) saturate(.9);
+}
+.vie-amc-side:hover img, .vie-amc-center:hover img {
+  transform: scale(1.06);
+  filter: brightness(.92) saturate(1.05);
+}
+.vie-amc-side:hover .galerie-overlay,
+.vie-amc-center:hover .galerie-overlay { opacity: 1; }
+.vie-amc-label {
+  position: absolute; bottom: 14px; left: 16px;
+  font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); z-index: 3;
+  background: rgba(0,0,0,.45); padding: 4px 10px;
+  backdrop-filter: blur(6px);
+}
+
+/* ── UNIVERS CARD WITH BG IMAGE ──────────────── */
+.univers-card {
+  background-size: cover !important;
+  background-position: center !important;
+}
+.univers-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(14,14,14,.88) 0%, rgba(14,14,14,.55) 60%, rgba(14,14,14,.3) 100%);
+  transition: background .4s;
+}
+.univers-card:hover .univers-card-overlay {
+  background: linear-gradient(to top, rgba(14,14,14,.75) 0%, rgba(14,14,14,.35) 60%, rgba(14,14,14,.1) 100%);
+}
+.univers-card .univers-icon,
+.univers-card > div:last-child { position: relative; z-index: 1; }
+
+/* ── ADMIN TABLE ─────────────────────────────── */
+#adminTable tbody tr { border-bottom: 1px solid rgba(200,169,107,.07); }
+#adminTable tbody tr:hover { background: rgba(200,169,107,.04); }
+#adminTable tbody td { padding: 12px 16px; color: var(--beige); }
+.admin-badge {
+  display: inline-block; padding: 3px 8px; font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+}
+.admin-badge.pending { background: rgba(200,169,107,.15); color: var(--gold); }
+.admin-badge.active  { background: rgba(100,200,100,.15); color: #8c8; }
+
+@media (max-width: 768px) {
+  .vie-amc-mosaic { grid-template-columns: 1fr; height: auto; }
+  .vie-amc-side, .vie-amc-center { height: 220px; }
+  .vie-amc-center { height: 280px; }
+}
+</style>
 </head>
 <body>
 
@@ -36,9 +101,26 @@
       <li><a onclick="navigate('contact')"      id="nav-contact">Contact</a></li>
     </ul>
 
-    <button class="nav-cta" onclick="navigate('don')">
-      <span>Faire un don</span>
-    </button>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème" title="Mode clair / sombre">
+        <!-- Lune (mode sombre actif) -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <!-- Soleil (mode clair actif) -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="var(--gold-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+
+      <button class="nav-cta" onclick="navigate('don')">
+        <span>Faire un don</span>
+      </button>
+    </div>
 
     <div class="hamburger" onclick="openMobile()" aria-label="Menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -132,7 +214,8 @@
         </div>
         <div class="univers-grid">
 
-          <div class="univers-card reveal">
+          <div class="univers-card reveal" style="background-image:url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=70');">
+            <div class="univers-card-overlay"></div>
             <div class="univers-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/>
@@ -145,7 +228,8 @@
             </div>
           </div>
 
-          <div class="univers-card reveal">
+          <div class="univers-card reveal" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70');">
+            <div class="univers-card-overlay"></div>
             <div class="univers-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2L8 6H4v12h16V6h-4L12 2z"/>
@@ -158,7 +242,8 @@
             </div>
           </div>
 
-          <div class="univers-card reveal">
+          <div class="univers-card reveal" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=70');">
+            <div class="univers-card-overlay"></div>
             <div class="univers-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <circle cx="12" cy="12" r="3"/>
@@ -171,7 +256,8 @@
             </div>
           </div>
 
-          <div class="univers-card reveal">
+          <div class="univers-card reveal" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=70');">
+            <div class="univers-card-overlay"></div>
             <div class="univers-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -185,7 +271,8 @@
             </div>
           </div>
 
-          <div class="univers-card reveal">
+          <div class="univers-card reveal" style="background-image:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&q=70');">
+            <div class="univers-card-overlay"></div>
             <div class="univers-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
@@ -292,21 +379,23 @@
           <p class="section-label">Nos moments</p>
           <h2 class="section-title">La vie <em>d'AMC</em></h2>
         </div>
-        <div class="galerie-grid">
+        <!-- Mosaic 3 images : côté | TALL centre | côté -->
+        <div class="vie-amc-mosaic">
 
-          <div class="galerie-item tall reveal" onclick="openLightbox(this)">
-            <img src="galerie/défilé/480712816_608440235387057_8403607310011299154_n.jpg" alt="Défilé AMC" loading="lazy" />
-            <div class="galerie-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.8)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
-          </div>
-
-          <div class="galerie-item reveal" onclick="openLightbox(this)">
+          <div class="vie-amc-side reveal" onclick="openLightbox(this)">
             <img src="galerie/concerts/482272315_618966761001071_98029328264799427_n.jpg" alt="Concert AMC" loading="lazy" />
-            <div class="galerie-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.8)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+            <div class="galerie-overlay"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.9)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
           </div>
 
-          <div class="galerie-item wide reveal" onclick="openLightbox(this)">
+          <div class="vie-amc-center reveal" onclick="openLightbox(this)">
+            <img src="galerie/défilé/480712816_608440235387057_8403607310011299154_n.jpg" alt="Défilé AMC" loading="lazy" />
+            <div class="galerie-overlay"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.9)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+            <div class="vie-amc-label">Défilé 2023</div>
+          </div>
+
+          <div class="vie-amc-side reveal" onclick="openLightbox(this)">
             <img src="galerie/public/472700731_17911223979086373_7301952942377907097_n.jpg" alt="Public AMC" loading="lazy" />
-            <div class="galerie-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.8)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+            <div class="galerie-overlay"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,107,0.9)" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
           </div>
 
         </div>
@@ -325,7 +414,7 @@
         <div class="artistes-grid-home">
           <div class="artiste-card reveal">
             <div class="artiste-img">
-              <img src="logo.png" alt="Sophie Martin — Peintre" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=75" alt="Sophie Martin — Peintre" loading="lazy" />
               <div class="artiste-overlay"></div>
             </div>
             <div class="artiste-body">
@@ -336,7 +425,7 @@
           </div>
           <div class="artiste-card reveal">
             <div class="artiste-img">
-              <img src="logo.png" alt="Kévin Toussaint — Musicien" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=75" alt="Kévin Toussaint — Musicien" loading="lazy" />
               <div class="artiste-overlay"></div>
             </div>
             <div class="artiste-body">
@@ -347,7 +436,7 @@
           </div>
           <div class="artiste-card reveal">
             <div class="artiste-img">
-              <img src="logo.png" alt="Aïcha Diallo — Danseuse" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1494790108755-2616b7f2b78b?w=400&q=75" alt="Aïcha Diallo — Danseuse" loading="lazy" />
               <div class="artiste-overlay"></div>
             </div>
             <div class="artiste-body">
@@ -449,9 +538,10 @@
 
         <div class="footer-bottom">
           <p>&copy; 2025 Art Mode &amp; Culture · Association Loi 1901</p>
-          <div style="display:flex; gap:24px;">
+          <div style="display:flex; gap:24px; align-items:center;">
             <a onclick="navigate('mentions')">Mentions légales</a>
             <a onclick="navigate('confidentialite')">Confidentialité</a>
+            <a onclick="navigate('admin-login')" style="font-size:0.62rem; opacity:0.3; letter-spacing:0.1em; color:var(--muted);" title="Espace administration">· Admin</a>
           </div>
         </div>
       </div>
@@ -479,29 +569,94 @@
             <p class="section-label">Notre raison d'être</p>
             <h2 class="section-title">Mission &amp; <em>Objectifs</em></h2>
             <div class="divider"></div>
-            <p>Promouvoir la culture, l'art et la mode en fédérant artistes, créateurs et amateurs au sein d'une communauté dynamique et inclusive.</p>
+            <p>L'association ART, MODE &amp; CULTURE rassemble stylistes, designers, exposants, artisans et artistes d'Afrique et d'Europe pour célébrer la fusion des cultures dans un esprit de partage et de fraternité.</p>
+            <p style="margin-top:14px;">Notre vision : faire de la culture un langage universel qui rapproche les peuples et les économies, en valorisant le patrimoine africain et en favorisant la coopération culturelle internationale.</p>
             <br />
             <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
               <li style="display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; color:var(--beige);">
-                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Développer des projets culturels innovants
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Sensibiliser la jeunesse à l'importance du patrimoine culturel
               </li>
               <li style="display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; color:var(--beige);">
-                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Organiser des événements fédérateurs
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Encourager l'acceptation des différences par un enrichissement mutuel
               </li>
               <li style="display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; color:var(--beige);">
-                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Valoriser les talents locaux
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Créer des coopérations culturelles en renforçant le vivre-ensemble
               </li>
               <li style="display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; color:var(--beige);">
-                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Favoriser le vivre-ensemble par la culture
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Concevoir des projets de développement culturel et d'entraide
               </li>
               <li style="display:flex; gap:12px; align-items:flex-start; font-size:0.88rem; color:var(--beige);">
-                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Créer des archives culturelles durables
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> S'aligner avec les initiatives UNESCO pour le dialogue interculturel
               </li>
             </ul>
           </div>
           <div class="intro-visual">
             <img src="logo.png" alt="Art Mode &amp; Culture" />
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION FESTIVAL 2026 sur la page Association -->
+    <section style="background:var(--black-soft);">
+      <div class="container">
+        <div class="reveal" style="text-align:center; margin-bottom:56px;">
+          <p class="section-label" style="justify-content:center;">Prochain grand rendez-vous</p>
+          <h2 class="section-title">Festival Culturel du Continent Africain<br /><em>4ème Édition · 2026</em></h2>
+          <div class="divider" style="margin:24px auto;"></div>
+          <p style="color:var(--beige); max-width:680px; margin:0 auto; font-size:0.95rem; line-height:1.9;">
+            Les 11 &amp; 12 juillet 2026 à la Salle des Fêtes de Fives, Lille — une célébration de la diversité culturelle sous le thème <strong style="color:var(--gold);">« Afrique créative : héritage, innovation et rayonnement »</strong>.
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-bottom:56px;" class="reveal">
+          <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:36px;">
+            <p style="font-size:0.62rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; font-weight:600; margin-bottom:20px;">Au programme</p>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;">
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> Défilé de Mode
+              </li>
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> Masterclass
+              </li>
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> Expositions-ventes
+              </li>
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> Prestations d'artistes
+              </li>
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> DJ Sets
+              </li>
+              <li style="display:flex; gap:12px; align-items:center; color:var(--beige); font-size:0.9rem;">
+                <span style="color:var(--gold); font-size:1.1rem;">✦</span> Soirée de Gala Caritative
+              </li>
+            </ul>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:36px;">
+            <p style="font-size:0.62rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; font-weight:600; margin-bottom:20px;">Objectifs du festival</p>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;">
+              <li style="display:flex; gap:12px; align-items:flex-start; color:var(--beige); font-size:0.88rem; line-height:1.6;">
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Présenter le patrimoine culturel africain
+              </li>
+              <li style="display:flex; gap:12px; align-items:flex-start; color:var(--beige); font-size:0.88rem; line-height:1.6;">
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Favoriser la transmission intergénérationnelle
+              </li>
+              <li style="display:flex; gap:12px; align-items:flex-start; color:var(--beige); font-size:0.88rem; line-height:1.6;">
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Encourager l'acceptation des différences culturelles
+              </li>
+              <li style="display:flex; gap:12px; align-items:flex-start; color:var(--beige); font-size:0.88rem; line-height:1.6;">
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Créer des coopérations entre pays africains et la diaspora
+              </li>
+              <li style="display:flex; gap:12px; align-items:flex-start; color:var(--beige); font-size:0.88rem; line-height:1.6;">
+                <span style="color:var(--gold); margin-top:2px;">&#8212;</span> Renforcer l'inclusion sociale et le dialogue interculturel
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="reveal" style="text-align:center;">
+          <button class="btn-primary" onclick="navigate('evenements')">Voir le programme complet</button>
         </div>
       </div>
     </section>
@@ -596,8 +751,8 @@
           <div class="timeline-item reveal">
             <div class="timeline-year">2026</div>
             <div class="timeline-content">
-              <h4>Concert "Unis contre les discriminations"</h4>
-              <p>21 mars 2026 au Le Mandé, Lille — un concert engagé portant un message fort autour de la lutte contre toutes les discriminations.</p>
+              <h4>Concert "Unis contre les discriminations" &amp; Festival 4ème Édition</h4>
+              <p>21 mars 2026 au Le Mandé — puis les 11 &amp; 12 juillet à la Salle des Fêtes de Fives pour la 4ème édition du Festival Culturel du Continent Africain, sous le thème « Afrique créative : héritage, innovation et rayonnement ».</p>
             </div>
           </div>
 
@@ -651,9 +806,30 @@
         </div>
 
         <div class="events-full-grid" id="eventsGrid">
+
+          <!-- FESTIVAL 2026 — carte mise en avant -->
+          <article class="event-card" data-year="2026 avenir" style="grid-column: span 2; display:grid; grid-template-columns:1fr 1fr; min-height:340px;">
+            <div class="event-img" style="height:100%; min-height:280px;">
+              <img src="galerie/Affiches/690205248_17964600612086373_2678800670389616223_n.jpg" alt="Festival Culturel du Continent Africain 2026" loading="lazy" />
+              <div class="event-img-overlay"></div>
+              <span class="event-tag" style="background:var(--gold); color:#111;">★ GRAND ÉVÉNEMENT</span>
+            </div>
+            <div class="event-body" style="justify-content:space-between; padding:36px;">
+              <div>
+                <p class="event-meta">11 &amp; 12 JUILLET 2026 · SALLE DES FÊTES DE FIVES, LILLE</p>
+                <h3 class="event-title" style="font-size:1.5rem;">Festival Culturel du Continent Africain — <em style="color:var(--gold);">4ème Édition</em></h3>
+                <p class="event-desc" style="margin-top:12px; line-height:1.8;">Sous le thème <strong>« Afrique créative : héritage, innovation et rayonnement »</strong> — défilés de mode, masterclass, expositions-ventes, prestations d'artistes, DJ et soirée de gala caritative.</p>
+              </div>
+              <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;">
+                <button class="event-btn" onclick="openFestivalModal()">Les exposants <span>&#8594;</span></button>
+                <button class="btn-outline" style="font-size:0.72rem; padding:10px 18px;" onclick="navigate('rejoindre')">Participer</button>
+              </div>
+            </div>
+          </article>
+
           <article class="event-card" data-year="2026 avenir">
             <div class="event-img">
-            <img src="galerie/concerts/482272315_618966761001071_98029328264799427_n.jpg" alt="Old School Ambiance" loading="lazy" />
+            <img src="galerie/concerts/482272315_618966761001071_98029328264799427_n.jpg" alt="Concert Unis contre les discriminations" loading="lazy" />
             <div class="event-img-overlay"></div>
             <span class="event-tag">À VENIR</span>
             </div>
@@ -1236,7 +1412,7 @@
           
           <div class="artiste-card reveal">
             <div class="artiste-img">
-              <img src="logo.png" alt="Portrait artiste" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=75" alt="Portrait artiste" loading="lazy" />
               <div class="artiste-overlay"></div>
             </div>
             <div class="artiste-body">
@@ -1455,9 +1631,10 @@
         </div>
         <div class="footer-bottom">
           <p>&copy; 2025 Art Mode &amp; Culture · Association Loi 1901</p>
-          <div style="display:flex; gap:24px;">
+          <div style="display:flex; gap:24px; align-items:center;">
             <a onclick="navigate('mentions')">Mentions légales</a>
             <a onclick="navigate('confidentialite')">Confidentialité</a>
+            <a onclick="navigate('admin-login')" style="font-size:0.62rem; opacity:0.3; letter-spacing:0.1em; color:var(--muted);" title="Espace administration">· Admin</a>
           </div>
         </div>
       </div>
@@ -1615,6 +1792,206 @@
     </footer>
   </div>
 
+
+
+  <!-- ══════════════════ PAGE ADMIN LOGIN ══════════════════ -->
+  <div class="page" id="page-admin-login">
+    <section style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--black);">
+      <div style="width:100%; max-width:400px; padding:24px;">
+        <div style="text-align:center; margin-bottom:40px;">
+          <img src="logo.png" alt="AMC" style="height:64px; margin:0 auto 20px; display:block;" />
+          <p class="section-label" style="justify-content:center;">Espace réservé</p>
+          <h2 class="section-title" style="font-size:1.8rem;">Administration <em>AMC</em></h2>
+        </div>
+        <div id="adminLoginForm">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label style="font-size:0.64rem; font-weight:600; letter-spacing:0.16em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:7px;">Email</label>
+            <input type="email" id="adminEmail" placeholder="Email administrateur"
+              style="width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(200,169,107,0.2); color:var(--off-white); padding:13px 15px; font-size:0.86rem; font-family:'Montserrat',sans-serif; outline:none;"
+              onkeydown="if(event.key==='Enter')adminLogin()" />
+          </div>
+          <div class="form-group" style="margin-bottom:24px;">
+            <label style="font-size:0.64rem; font-weight:600; letter-spacing:0.16em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:7px;">Mot de passe</label>
+            <input type="password" id="adminPassword" placeholder="Mot de passe"
+              style="width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(200,169,107,0.2); color:var(--off-white); padding:13px 15px; font-size:0.86rem; font-family:'Montserrat',sans-serif; outline:none;"
+              onkeydown="if(event.key==='Enter')adminLogin()" />
+          </div>
+          <div id="adminLoginError" style="display:none; color:#e55; font-size:0.78rem; margin-bottom:16px; text-align:center;"></div>
+          <button class="btn-primary" onclick="adminLogin()" style="width:100%; padding:14px;">Connexion</button>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <a onclick="navigate('accueil')" style="font-size:0.72rem; color:var(--muted); cursor:pointer;">← Retour au site</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════ PAGE ADMIN DASHBOARD ══════════════════ -->
+  <div class="page" id="page-admin">
+    <section style="padding:120px 0 80px;">
+      <div class="container">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:48px; flex-wrap:wrap; gap:16px;">
+          <div>
+            <p class="section-label">Espace administration</p>
+            <h1 class="section-title">Tableau de <em>bord</em></h1>
+          </div>
+          <button class="btn-outline" onclick="adminLogout()" style="font-size:0.66rem;">Se déconnecter</button>
+        </div>
+
+        <!-- Stat cards -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px;">
+          <div class="glass" style="padding:28px 24px; border:1px solid var(--glass-bdr); text-align:center;">
+            <div id="admin-stat-total" style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--gold); line-height:1;">0</div>
+            <p style="font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-top:8px;">Adhérents total</p>
+          </div>
+          <div class="glass" style="padding:28px 24px; border:1px solid var(--glass-bdr); text-align:center;">
+            <div id="admin-stat-month" style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--gold); line-height:1;">0</div>
+            <p style="font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-top:8px;">Ce mois</p>
+          </div>
+          <div class="glass" style="padding:28px 24px; border:1px solid var(--glass-bdr); text-align:center;">
+            <div id="admin-stat-pending" style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--gold); line-height:1;">0</div>
+            <p style="font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-top:8px;">En attente</p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; gap:12px; margin-bottom:36px; flex-wrap:wrap;">
+          <button class="btn-primary" onclick="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger CSV adhérents
+          </button>
+          <button class="btn-outline" onclick="adminRefresh()">Actualiser</button>
+          <button class="btn-outline" onclick="adminClearData()" style="border-color:rgba(200,100,100,0.4); color:#e88;">Vider les données</button>
+        </div>
+
+        <!-- Table adhérents -->
+        <div style="overflow-x:auto; border:1px solid var(--glass-bdr); background:rgba(255,255,255,0.02);">
+          <table id="adminTable" style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--glass-bdr);">
+                <th style="padding:14px 16px; text-align:left; color:var(--gold); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-size:0.62rem;">Nom</th>
+                <th style="padding:14px 16px; text-align:left; color:var(--gold); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-size:0.62rem;">Email</th>
+                <th style="padding:14px 16px; text-align:left; color:var(--gold); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-size:0.62rem;">Profil</th>
+                <th style="padding:14px 16px; text-align:left; color:var(--gold); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-size:0.62rem;">Date</th>
+                <th style="padding:14px 16px; text-align:left; color:var(--gold); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-size:0.62rem;">Statut</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody">
+              <tr><td colspan="5" style="padding:32px; text-align:center; color:var(--muted);">Aucun adhérent enregistré pour le moment.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.72rem; color:var(--muted); margin-top:12px;">Les données sont stockées localement dans ce navigateur.</p>
+
+      </div>
+    </section>
+    <footer>
+      <div class="container">
+        <div class="footer-bottom" style="border-top:none; padding-top:0;">
+          <p>&copy; 2025 Art Mode &amp; Culture · Administration</p>
+          <a onclick="navigate('accueil')" style="font-size:0.72rem; color:var(--muted); cursor:pointer;">Retour au site</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ══════════════════ MODAL EXPOSANTS FESTIVAL 2026 ══════════════════ -->
+  <div id="festivalModal" style="display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,0.88); backdrop-filter:blur(12px); overflow-y:auto; padding:40px 16px;" onclick="if(event.target===this){closeFestivalModal();}">
+    <div style="max-width:860px; margin:0 auto; background:var(--section-bg, #111); border:1px solid rgba(200,169,107,0.25); padding:48px 40px; position:relative;" onclick="event.stopPropagation()">
+      <button onclick="closeFestivalModal()" style="position:absolute; top:16px; right:20px; color:var(--gold); background:none; border:none; font-size:1.6rem; cursor:pointer; line-height:1;" aria-label="Fermer">&times;</button>
+      
+      <p style="font-size:0.62rem; letter-spacing:0.2em; color:var(--gold); text-transform:uppercase; font-weight:600; margin-bottom:8px;">Festival Culturel du Continent Africain · 4ème Édition · 2026</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:2.2rem; color:var(--off-white); margin-bottom:8px;">Les <em style="color:var(--gold);">Exposants</em></h2>
+      <p style="font-size:0.85rem; color:var(--beige); margin-bottom:40px; line-height:1.7;">Découvrez les artistes, créateurs et entrepreneurs présents les 11 &amp; 12 juillet 2026 à la Salle des Fêtes de Fives, Lille.</p>
+      <div style="height:1px; background:linear-gradient(90deg, transparent, rgba(200,169,107,0.4), transparent); margin-bottom:40px;"></div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;" class="exposants-grid">
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Kameleon</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Artiste camerounaise complète — danseuse, comédienne et chanteuse. MAK'CAMÉLÉON est une personnalité aux multiples facettes, prête à enflammer la scène du festival.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Artiste · Performance scénique</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">The Witcher <span style="font-weight:400; color:var(--text-muted, #888);">— Sponsor officiel</span></p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Maya est une entrepreneure passionnée par le bien-être, la beauté et les produits du quotidien. Elle proposera une gamme de produits de soin, parfums et entretien alliant qualité et efficacité.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Beauté &amp; Bien-être · Sponsor officiel</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Kara &amp; Compagnie</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Agence créative en communication et événementiel spécialisée dans la Mode et les Cultures Urbaines. Elle accompagne artistes et entrepreneurs dans la valorisation de leur identité et de leurs services.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Communication &amp; Événementiel</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Coin des Tresses</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Ndella Amédée DIAGNE, coiffeuse spécialisée dans les tresses pour enfants, les coiffures protectrices express pour adultes et le resserrage de locks. Basée à Lille.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Coiffure afro · Lille</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">A. Kate Design</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">La marque de la styliste modéliste-artiste ANNA KATE, originaire du Togo. Créations de vêtements, accessoires de mode et poupées artisanales en tissus africains et perles traditionnelles.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Mode africaine · Artisanat</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Leyane</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Maison artisanale spécialisée dans les bougies, fondants parfumés et compositions olfactives faites à la main. Bouquets parfumés avec touches de wax, bougies de massage et dragées sur mesure.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Bougies artisanales · Parfumerie</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">GF Ébène Beauty</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Univers dédié à la beauté, à la féminité et à l'élégance : Press On Nails réutilisables, Press On Lashes auto-adhésifs et prestations beauté sur place. Une expérience pensée pour révéler la confiance de chaque femme.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Beauté &amp; Féminité</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">PhilOburo</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Espace de coworking situé dans une ancienne usine de torréfaction du quartier Vauban à Lille. Bureaux, salles de réunion et espaces créatifs pour entrepreneurs, indépendants et porteurs de projets.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Coworking · Vauban, Lille</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Nastar</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Conseillère en Gestion de Patrimoine indépendante. Au festival, elle animera un espace d'échange sur l'épargne, l'investissement, le budget, l'immobilier, la retraite et la transmission du patrimoine.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Finance &amp; Patrimoine</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Fidschi'Invest</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Acteur du domaine de l'investissement et de la finance, Fidschi'Invest sera présent pour accompagner et informer le public sur les opportunités d'investissement accessibles à tous.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Investissement &amp; Finance</p>
+        </div>
+
+        <div style="background:rgba(200,169,107,0.04); border:1px solid rgba(200,169,107,0.14); padding:28px; display:flex; flex-direction:column; gap:12px; grid-column:span 2;">
+          <p style="font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; font-weight:700;">Afro News TV</p>
+          <p style="color:var(--beige); font-size:0.87rem; line-height:1.75;">Média d'informations couvrant l'actualité africaine et de la diaspora. Afro News TV sera présent au festival pour assurer la couverture médiatique de l'événement et diffuser les temps forts auprès de leur audience.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted, #888); letter-spacing:0.08em; text-transform:uppercase;">Média &amp; Presse africaine</p>
+        </div>
+
+      </div>
+
+      <div style="margin-top:40px; padding-top:32px; border-top:1px solid rgba(200,169,107,0.15); text-align:center; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="navigate('rejoindre'); closeFestivalModal()">Devenir exposant</button>
+        <button class="btn-outline" onclick="closeFestivalModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+  @media (max-width: 640px) {
+    .exposants-grid { grid-template-columns: 1fr !important; }
+    .exposants-grid > div[style*="grid-column:span 2"] { grid-column: span 1 !important; }
+    #festivalModal > div { padding: 32px 20px !important; }
+    article.event-card[style*="grid-column: span 2"] { grid-column: span 1 !important; grid-template-columns: 1fr !important; }
+    article.event-card[style*="grid-column: span 2"] .event-img { height: 220px !important; }
+  }
+  </style>
 
   <!-- Script principal -->
   <script src="Main.js"></script>
