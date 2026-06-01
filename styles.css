@@ -1080,6 +1080,80 @@ footer {
 .galerie-full-item:nth-child(7n) { aspect-ratio: 3/4; }
 
 /* ════════════════════════════════════
+   PAGE FESTIVAL
+════════════════════════════════════ */
+.festival-hero { padding: 160px 0 80px; text-align: center; }
+.festival-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 56px; }
+.festival-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,169,107,0.15);
+  padding: 36px;
+  border-radius: 4px;
+}
+.festival-programme {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 48px;
+}
+.programme-item {
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(200,169,107,0.08);
+  padding: 32px;
+  text-align: center;
+  transition: all .3s;
+  border-radius: 4px;
+}
+.programme-item:hover {
+  background: rgba(200,169,107,0.05);
+  border-color: rgba(200,169,107,0.25);
+  transform: translateY(-4px);
+}
+.programme-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+.programme-item h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--off-white);
+  margin-bottom: 12px;
+}
+.programme-item p {
+  font-size: 0.85rem;
+  color: var(--beige);
+  line-height: 1.7;
+}
+.festival-infos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+.festival-info-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,169,107,0.12);
+  padding: 28px;
+  border-radius: 4px;
+}
+
+/* Responsive festival */
+@media (max-width: 1024px) {
+  .festival-grid { grid-template-columns: 1fr; }
+  .festival-programme { grid-template-columns: repeat(2, 1fr); }
+  .festival-infos { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .festival-grid { gap: 32px; }
+  .festival-programme { grid-template-columns: 1fr; gap: 20px; }
+  .festival-infos { grid-template-columns: 1fr; gap: 20px; }
+  .festival-card { padding: 24px; }
+  .programme-item { padding: 24px; }
+}
+
+/* ════════════════════════════════════
    ANIMATIONS
 ════════════════════════════════════ */
 @keyframes fadeUp {
