@@ -205,14 +205,22 @@ nav.scrolled {
   overflow: hidden;
   background: var(--black);
 }
+.hero-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  z-index: 0;
+}
 .hero-bg {
   position: absolute; inset: 0;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, rgba(200,169,107,0.07) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(200,169,107,0.03) 0%, transparent 60%);
+  z-index: 1;
 }
 .hero-grain {
-  position: absolute; inset: 0; opacity: 0.035;
+  position: absolute; inset: 0; opacity: 0.035; z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -402,15 +410,15 @@ section { padding: 100px 0; }
 .intro-text p { font-size: 1rem; font-weight: 300; color: var(--beige); line-height: 1.9; margin-bottom: 20px; }
 .intro-visual {
   position: relative; aspect-ratio: 3/4; max-height: 420px;
-  background: linear-gradient(135deg, var(--black) 0%, #1f1a12 100%);
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--glass-border);
 }
 .intro-visual::before {
-  content: ''; position: absolute; inset: 12px;
-  border: 1px solid rgba(200,169,107,0.08);
+  display: none;
 }
-.intro-visual img { width: 55%; opacity: 0.9; }
+.intro-visual img { width: 100%; opacity: 1; }
+.intro-visual .hero-logo-3d-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.intro-visual .hero-logo-3d-wrapper img { width: 70%; height: auto; }
 
 /* ── UNIVERS ── */
 .univers-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 56px; }
@@ -536,6 +544,8 @@ section { padding: 100px 0; }
   gap: 3px;
   margin-top: 56px;
 }
+.galerie-grid .galerie-item.tall { grid-row: span 2; grid-column: span 1; }
+.galerie-grid .galerie-item.wide { grid-column: span 2; grid-row: span 1; }
 .galerie-item {
   background: linear-gradient(135deg, #1a1510, #111);
   overflow: hidden; position: relative; cursor: pointer;
@@ -832,16 +842,63 @@ footer {
 .impact-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
 
 /* ════════════════════════════════════
-   PAGE PARTENAIRES
+   PAGE ARTISTES
 ════════════════════════════════════ */
-.partenaires-hero { padding: 160px 0 60px; text-align: center; }
-.partenaires-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin: 48px 0; }
-.partenaire-card {
-  aspect-ratio: 2/1; background: var(--black-soft); border: 1px solid var(--glass-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem; color: var(--text-muted); transition: all .3s; cursor: default;
+.artistes-hero { padding: 160px 0 60px; text-align: center; }
+.artistes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin: 48px 0; }
+.artistes-grid-home { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin: 48px 0; }
+.artiste-card {
+  background: var(--black-soft); border: 1px solid rgba(200,169,107,0.1);
+  overflow: hidden; transition: all .4s; position: relative;
 }
-.partenaire-card:hover { border-color: rgba(200,169,107,0.25); color: var(--off-white); }
+.artiste-card:hover {
+  border-color: rgba(200,169,107,0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,169,107,0.15);
+}
+.artiste-img {
+  aspect-ratio: 3/4; background: linear-gradient(135deg, #1a1510 0%, #0f0f0f 100%);
+  overflow: hidden; position: relative;
+}
+.artiste-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; transition: transform .5s ease;
+}
+.artiste-card:hover .artiste-img img { transform: scale(1.06); }
+.artiste-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  pointer-events: none;
+}
+.artiste-body { padding: 24px; }
+.artiste-name {
+  font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400;
+  margin-bottom: 6px; color: var(--off-white);
+}
+.artiste-discipline {
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px; font-weight: 500;
+}
+.artiste-bio {
+  font-size: 0.85rem; color: var(--beige); line-height: 1.7;
+  margin-bottom: 16px; min-height: 80px;
+}
+.artiste-link {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold); text-decoration: none;
+  transition: all .3s; display: inline-flex; align-items: center; gap: 6px;
+}
+.artiste-link:hover { gap: 10px; }
+
+/* Responsive artistes grid */
+@media (max-width: 1024px) { 
+  .artistes-grid { grid-template-columns: repeat(2, 1fr); } 
+  .artistes-grid-home { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) { 
+  .artistes-grid { grid-template-columns: 1fr; }
+  .artistes-grid-home { grid-template-columns: 1fr; }
+}
 
 /* ════════════════════════════════════
    PAGE CONTACT
