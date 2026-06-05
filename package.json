@@ -1,0 +1,26 @@
+{
+  "name": "amc-site-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akenneth1/AMC-site-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akenneth1/AMC-site-web/issues"
+  },
+  "homepage": "https://github.com/Akenneth1/AMC-site-web#readme",
+  "devDependencies": {
+    "vite": "^8.0.16"
+  }
+}
