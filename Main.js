@@ -3,7 +3,7 @@ import { db, storage, auth } from './firebase-config.js';
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-const SHEETDB_URL = import.meta.env.VITE_SHEETDB_URL;
+const SHEETDB_URL = (import.meta.env && import.meta.env.VITE_SHEETDB_URL) || 'https://sheetdb.io/api/v1/yf325l4woltxi';
 
 // Helper to hash string for security
 async function hashString(str) {
@@ -21,6 +21,8 @@ function escHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+// NAVIGATION — voir version admin en bas du fichier
 
 // MOBILE MENU
 function openMobile() {
@@ -152,7 +154,8 @@ async function submitAdhesion() {
   btn.disabled = true;
 
   try {
-    if (import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_API_KEY !== 'votre_api_key') {
+    const isFirebaseConfigured = import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_API_KEY !== 'votre_api_key';
+    if (isFirebaseConfigured) {
       await addDoc(collection(db, "adherents"), adherentData);
     } else {
       await fetch(SHEETDB_URL, {
@@ -178,8 +181,8 @@ async function submitAdhesion() {
 // ═══════════════════════════════════════════════════════════
 //  ADMIN CMS LOGIC
 // ═══════════════════════════════════════════════════════════
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
-const ADMIN_HASH  = import.meta.env.VITE_ADMIN_HASH;
+const ADMIN_EMAIL = (import.meta.env && import.meta.env.VITE_ADMIN_EMAIL) || 'artmodeculture@gmail.com';
+const ADMIN_HASH  = (import.meta.env && import.meta.env.VITE_ADMIN_HASH) || '43151764bcdfc907da60f13d47fc166768829be22a13bacbc51c46256f61a78b';
 
 async function adminLogin() {
   const email = document.getElementById('adminEmail')?.value?.trim();
@@ -206,7 +209,8 @@ async function adminRefresh() {
 
   try {
     let list = [];
-    if (import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_API_KEY !== 'votre_api_key') {
+    const isFirebaseConfigured = import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_API_KEY !== 'votre_api_key';
+    if (isFirebaseConfigured) {
       const q = query(collection(db, "adherents"), orderBy("createdAt", "desc"));
       const snap = await getDocs(q);
       snap.forEach(d => list.push({ id: d.id, ...d.data() }));
@@ -216,7 +220,8 @@ async function adminRefresh() {
       if(Array.isArray(list)) list = list.reverse();
     }
 
-    document.getElementById('admin-stat-total').textContent = list.length;
+    const statEl = document.getElementById('admin-stat-total');
+    if (statEl) statEl.textContent = list.length;
 
     tbody.innerHTML = list.map(a => `
       <tr>
